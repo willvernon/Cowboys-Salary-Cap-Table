@@ -45,7 +45,16 @@ team_cap_hit = pd.DataFrame({
 })
 # print(team_cap_hit)
 st.title('Dallas Cowboys 24-25 Compared to league Avg')
-st.markdown('These are all graphs that help explain the Salary Cap Table for the NFLs Dallas Cowboys. Here I will be breaking down different parts of the teams structure, strengths, weaknesses, liabilities, and points for improvement')
+st.subheader('These are all graphs that help explain the Salary Cap Table for the NFLs Dallas Cowboys.')
+st.write('')
+st.markdown('In this analysis, I will examine various aspects of the Dallas Cowboys’ team structure, identifying their strengths, weaknesses, liabilities, and areas for improvement. Specifically, I will focus on the NFL’s Dallas Cowboys’ salary cap table for the 2024-2025 season. Below, I present several concise graphs that illustrate the Cowboys’ cap spending distribution across different positions on the field. These graphs provide a visual representation of the team’s financial allocation and highlight the areas where they have invested more or less compared to other teams. Additionally, I have included graphs that display the Average Annual Value (AAV) of players’ contracts. This metric compares the average compensation paid to players by various teams to the Cowboys’ spending.')
+st.write("")
+
+st.markdown('By presenting these data, I aim to provide a comprehensive understanding of the Cowboys’ financial management practices and strategies on the business side of the game.')
+
+st.write('')
+
+st.divider()
 
 # TODO: 
 #################################### 
@@ -67,6 +76,28 @@ sob_bar_plot = st.altair_chart(sob_bars)
 
 # TODO:
 #################################### 
+# Layered Bar Cap Hit vs Dead Cap  # 
+####################################
+
+
+long_format_df = df.melt(id_vars=['POS'], value_vars=['CAP HIT', 'DEAD CAP'])
+# print(long_format_df[long_format_df['POS'] == 'QB'])
+
+layered =alt.Chart(long_format_df).mark_bar(opacity=0.7).encode(
+        x='POS',
+        y='value:Q',
+        color='variable'
+).properties(
+    title='Cap Hit vs Dead Cap by Position'
+)
+
+layered_bar = st.altair_chart(layered)
+st.markdown('The accompanying graph provides a comprehensive analysis of the cap hit associated with the quarterback position, with a specific focus on the Cap Hit with the Dead Cap Hit. The substantial liability associated with the quarterback position, as exemplified by the Prescott contract, underscores the critical role of the quarterback in a team’s success and the significant financial burden it may incur in the future.')
+
+st.divider()
+
+# TODO:
+#################################### 
 # AVV by POS vs League Avg AVV POV # 
 ####################################
 
@@ -81,8 +112,6 @@ lg_pos_avg = pd.DataFrame({
     'pos': ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'SEC', 'K', 'P', 'LS'],
     'aav': [41.01, 11.5, 41.31, 13.96, 57.91, 50.56, 34.39, 45.96, 3.94, 2.1, 1.39]
 }).set_index('pos').loc[dal_pos_avg['pos']].reset_index()
-
-st.markdown('This first chart shows Dallas position AAV (Average Annual Value) compared to the league Avg (Red Tick) AAV is the average value of a players contract over the full years of the contract length')
 
 # Bar chart for team AAV by position (sorted)
 aav_bar = alt.Chart(dal_pos_avg).mark_bar().encode(
@@ -109,27 +138,14 @@ aav_combined_chart = aav_bar + aav_tick
 
 aav_bar_tick = st.altair_chart(aav_combined_chart)
 
+st.write('')
+st.markdown('The Annual Average Value (AAV) of a players contract is represented in this graph, which illustrates the combined AAV for each position. The red bars indicate the league average for each position. This graph may be of paramount importance, as it demonstrates how the team aligns with the league’s performance. Given that each team is limited to the same salary cap, the need to match the league average is crucial for competitiveness.')
+st.markdown('The two new contracts of CeeDee Lamb and Dak Prescott stand out significantly above the league average. Conversely, the Cowboys have several rookies with lower-than-league average AAVs due to their standout performances.')
+st.markdown('At a glance, this strategy may appear feasible, as the limited contracts of the rookies allow the Cowboys to pay star players more while maintaining a competitive team. However, a closer examination reveals that 23 players on the 53-man roster are eligible for free agency in 2025, with an additional 11 in 2026. This presents a challenge, as some of these rookies, such as Micah Parsons, require substantial salary increases beyond their rookie deals.')
 
-# TODO:
-#################################### 
-# Layered Bar Cap Hit vs Dead Cap  # 
-####################################
-
-
-long_format_df = df.melt(id_vars=['POS'], value_vars=['CAP HIT', 'DEAD CAP'])
-# print(long_format_df[long_format_df['POS'] == 'QB'])
-
-layered =alt.Chart(long_format_df).mark_bar(opacity=0.7).encode(
-        x='POS',
-        y='value:Q',
-        color='variable'
-).properties(
-    title='Cap Hit vs Dead Cap by Position'
-)
-
-layered_bar = st.altair_chart(layered)
-st.markdown('This graph above presents a comprehensive analysis of the cap hit associated with the quarterback position, specifically highlighting the Cap Hit with the Dead Cap Hit. The substantial liability focused at the quarterback position due to the Prescott contract shows the teams quarterback situation and the significant financial burden it could face in the future.')
-
+st.markdown('The team finds itself in a precarious position, one that many teams encounter when they overpay for a few superstar players, hoping that the skill-gap fillers they can no longer afford to pay will compensate. The final graph provides a snapshot of the total current salary cap hit for these players becoming free agents. While this figure may not be sufficient to retain the players, it is likely to be significantly higher than the current cap space of $23 million. Consequently, the Cowboys will need to consider the draft to address the gaps left by the players they will have to release through free agency.')
+st.write('')
+st.write('')
 
 # TODO:
 #################################### 
